@@ -18,6 +18,7 @@ from gui.image_list import ImageListWidget
 from gui.settings_panel import SettingsPanel
 from gui.progress_dialog import ProgressDialog
 from gui.targeted_edit_tab import TargetedEditTab
+from gui.style_transfer_tab import StyleTransferTab
 from api_client import NanoBananaClient
 from batch_processor import BatchProcessor, BatchJob, ImageStatus, ImageItem
 from utils.config import get_config, Config
@@ -144,6 +145,10 @@ class MainWindow(QMainWindow):
         # === Targeted Edit Tab ===
         self._targeted_edit_tab = TargetedEditTab()
         self._tab_widget.addTab(self._targeted_edit_tab, "🎯 Édition Ciblée")
+        
+        # === Style Transfer Tab ===
+        self._style_transfer_tab = StyleTransferTab()
+        self._tab_widget.addTab(self._style_transfer_tab, "🎨 Transfert de Style")
         
         # === Settings Tab (API only) ===
         self._settings_panel = SettingsPanel()
@@ -475,7 +480,7 @@ class MainWindow(QMainWindow):
                 self, "Attention", 
                 "Clé API non configurée. Allez dans l'onglet Paramètres."
             )
-            self._tab_widget.setCurrentIndex(3)
+            self._tab_widget.setCurrentIndex(4)
             return
         
         # Apply style to prompt
@@ -559,7 +564,7 @@ class MainWindow(QMainWindow):
                 self, "Attention", 
                 "Clé API non configurée. Allez dans l'onglet Paramètres."
             )
-            self._tab_widget.setCurrentIndex(3)
+            self._tab_widget.setCurrentIndex(4)
             return
         
         output_folder = self._gen_output_folder_edit.text().strip()

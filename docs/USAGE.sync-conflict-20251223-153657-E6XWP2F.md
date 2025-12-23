@@ -135,38 +135,6 @@ Cet onglet permet de **modifier une zone spécifique** d'une image en dessinant 
 
 ---
 
-## Onglet Transfert de Style
-
-Cet onglet permet d'**appliquer le style d'une image sur une autre**.
-
-### Comment utiliser
-
-1. **Charger l'image source** :
-   - C'est l'image que vous voulez transformer
-   - Cliquez sur **"📂 Charger l'image source"**
-
-2. **Charger l'image de style** :
-   - C'est l'image dont vous voulez copier le style
-   - Cliquez sur **"📂 Charger l'image de style"**
-
-3. **Choisir l'intensité** :
-   - **Subtil** : Légère influence du style
-   - **Modéré** : Équilibre entre source et style
-   - **Fort** : Le style domine fortement
-
-4. **Appliquer** :
-   - Cliquez sur **"🎨 Appliquer le style"**
-
-### Exemples
-
-| Image Source | Image Style | Résultat |
-|--------------|-------------|----------|
-| Photo de paysage | Tableau de Van Gogh | Paysage en style impressionniste |
-| Portrait | Photo vintage | Portrait avec tons sépia |
-| Architecture | Aquarelle | Bâtiment en style aquarelle |
-
----
-
 ## Paramètres
 
 ### Options disponibles

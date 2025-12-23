@@ -417,3 +417,133 @@ class NanoBananaClient:
             
         except Exception as e:
             return None, f"Erreur de traitement: {e}"
+    
+    def style_transfer(
+        self,
+        source_image_path: str,
+        style_image_path: str,
+        prompt: str,
+        model: str = "gemini-2.5-flash-image",
+        output_quality: str = "standard",
+        max_retries: int = 3,
+        retry_delay: float = 2.0
+    ) -> Tuple[Optional[bytes], Optional[str]]:
+        """
+        Apply the style of one image onto another.
+        
+        This method sends the source image and a style reference image,
+        asking the AI to apply the style, texture, and colors of the
+        reference image to the source.
+        
+        Args:
+            source_image_path: Path to the source image to transform
+            style_image_path: Path to the style reference image
+            prompt: Instructions for the style transfer
+            model: Model to use for generation
+            output_quality: Output quality
+            max_retries: Maximum number of retry attempts
+            retry_delay: Delay between retries in seconds
+        
+        Returns:
+            Tuple of (image_bytes, error_message)
+        """
+        if self._client is None:
+            return None, "Client non initialisé"
+        
+        try:
+            from google.genai import types
+            from PIL import ExifTags
+            
+            # Load source image with EXIF correction
+            source_image = Image.open(source_image_path)
+            try:
+                exif = source_image._getexif()
+                if exif:
+                    orientation_key = next(
+                        (k for k, v in ExifTags.TAGS.items() if v == 'Orientation'), 
+                        None
+                    )
+                    if orientation_key and orientation_key in exif:
+                        orientation = exif[orientation_key]
+                        if orientation == 2:
+                            source_image = source_image.transpose(Image.FLIP_LEFT_RIGHT)
+                        elif orientation == 3:
+                            source_image = source_image.rotate(180, expand=True)
+                        elif orientation == 4:
+                            source_image = source_image.transpose(Image.FLIP_TOP_BOTTOM)
+                        elif orientation == 5:
+                            source_image = source_image.rotate(-90, expand=True).transpose(Image.FLIP_LEFT_RIGHT)
+                        elif orientation == 6:
+                            source_image = source_image.rotate(-90, expand=True)
+                        elif orientation == 7:
+                            source_image = source_image.rotate(90, expand=True).transpose(Image.FLIP_LEFT_RIGHT)
+                        elif orientation == 8:
+                            source_image = source_image.rotate(90, expand=True)
+            except Exception:
+                pass
+            
+            # Load style image
+            style_image = Image.open(style_image_path)
+            
+            # Build configuration
+            config_kwargs = {
+                "response_modalities": ["Image", "Text"]
+            }
+            
+            image_config_kwargs = {}
+            if output_quality in ("2K", "4K"):
+                image_config_kwargs["image_size"] = output_quality
+            
+            if image_config_kwargs:
+                config_kwargs["image_config"] = types.ImageConfig(**image_config_kwargs)
+            
+            config = types.GenerateContentConfig(**config_kwargs)
+            
+            # Build the prompt for style transfer
+            enhanced_prompt = (
+                f"Je te fournis deux images:\n"
+                f"1. L'IMAGE SOURCE (première image) - c'est l'image à transformer\n"
+                f"2. L'IMAGE DE STYLE (deuxième image) - c'est le style à appliquer\n\n"
+                f"INSTRUCTION: {prompt}\n\n"
+                f"Génère une nouvelle image qui conserve le contenu et la composition de l'image source, "
+                f"mais avec le style visuel, les couleurs, les textures et l'ambiance de l'image de style."
+            )
+            
+            # Attempt with retries
+            last_error = None
+            for attempt in range(max_retries):
+                try:
+                    response = self._client.models.generate_content(
+                        model=model,
+                        contents=[enhanced_prompt, source_image, style_image],
+                        config=config
+                    )
+                    
+                    # Extract image from response
+                    for part in response.parts:
+                        if part.inline_data is not None:
+                            import base64
+                            image_data = part.inline_data.data
+                            if isinstance(image_data, str):
+                                image_bytes = base64.b64decode(image_data)
+                            else:
+                                image_bytes = image_data
+                            return image_bytes, None
+                    
+                    for part in response.parts:
+                        if part.text:
+                            return None, f"L'API n'a pas généré d'image: {part.text[:200]}"
+                    
+                    return None, "L'API n'a pas retourné d'image"
+                    
+                except Exception as e:
+                    last_error = str(e)
+                    if attempt < max_retries - 1:
+                        time.sleep(retry_delay * (attempt + 1))
+                        continue
+                    break
+            
+            return None, f"Erreur après {max_retries} tentatives: {last_error}"
+            
+        except Exception as e:
+            return None, f"Erreur de traitement: {e}"

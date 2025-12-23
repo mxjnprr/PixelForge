@@ -15,12 +15,17 @@ Application de traitement et génération d'images utilisant l'API Nano Banana (
 - Génération par lot (jusqu'à 10 images)
 - Aperçus interactifs cliquables
 
-### 🎯 Édition Ciblée (NOUVEAU)
+### 🌐 Édition Ciblée
 - **Dessinez directement** sur l'image pour indiquer la zone à modifier
 - **Outils de sélection** : Rectangle, Ellipse, Sélection libre
 - **Pinceau** avec 10 couleurs + couleur personnalisée
 - **Taille de pinceau ajustable** (2-50px)
 - L'IA modifie uniquement la zone dessinée
+
+### 🎨 Transfert de Style (NOUVEAU)
+- **Mixez le style** d'une image de référence sur votre image source
+- **Intensité réglable** : Subtil, Modéré, Fort
+- Appliquez textures, couleurs et ambiances d'une photo à une autre
 
 ### ⚙️ Général
 - Configuration persistante automatique
@@ -95,6 +100,7 @@ PixelForge/
 ├── gui/
 │   ├── main_window.py      # Fenêtre principale
 │   ├── targeted_edit_tab.py # Édition ciblée avec dessin
+│   ├── style_transfer_tab.py # Transfert de style
 │   ├── image_list.py       # Liste d'images
 │   └── ...
 ├── docs/
