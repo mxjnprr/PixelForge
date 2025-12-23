@@ -1,206 +1,117 @@
-# 🍌 Nano Banana Batch Processor
+# 🔥 PixelForge Studio
 
-Application de traitement d'images en masse utilisant l'API Nano Banana (Gemini) de Google.
+Application de traitement et génération d'images utilisant l'API Nano Banana (Gemini) de Google.
 
-## Fonctionnalités
+## ✨ Fonctionnalités
 
-- **Traitement en masse** : Appliquez le même prompt à plusieurs images simultanément
-- **Interface glisser-déposer** : Ajoutez facilement des images par drag & drop
-- **Progression visuelle** : Suivez l'avancement du traitement en temps réel
-- **Configuration persistante** : Vos paramètres sont sauvegardés automatiquement
-- **Cross-platform** : Fonctionne sous Linux et Windows
+### 📷 Édition en Masse
+- Appliquez le même prompt à plusieurs images simultanément
+- Interface glisser-déposer pour ajouter des images
+- Progression visuelle en temps réel
+- Styles prédéfinis (Aquarelle, Cartoon, Cyberpunk, etc.)
 
-## Prérequis
+### ✨ Génération d'Images
+- Créez des images à partir de descriptions textuelles
+- Génération par lot (jusqu'à 10 images)
+- Aperçus interactifs cliquables
+
+### 🎯 Édition Ciblée (NOUVEAU)
+- **Dessinez directement** sur l'image pour indiquer la zone à modifier
+- **Outils de sélection** : Rectangle, Ellipse, Sélection libre
+- **Pinceau** avec 10 couleurs + couleur personnalisée
+- **Taille de pinceau ajustable** (2-50px)
+- L'IA modifie uniquement la zone dessinée
+
+### ⚙️ Général
+- Configuration persistante automatique
+- Stockage sécurisé de la clé API (trousseau système)
+- Cross-platform : Linux et Windows
+
+## 📋 Prérequis
 
 - Python 3.9 ou supérieur
 - Une clé API Gemini (gratuite sur [Google AI Studio](https://aistudio.google.com/app/apikey))
 
-## Installation
+## 🚀 Installation
 
 ### Option A : Installation rapide (recommandée)
 
-Cette méthode installe l'application sur votre système avec un raccourci dans le menu des applications.
-
-#### 1. Cloner le dépôt GitHub
-
 ```bash
+# 1. Cloner le dépôt
 git clone https://github.com/mxjnprr/PixelForge.git
 cd PixelForge
-```
 
-#### 2. Lancer le script d'installation
+# 2. Lancer le script d'installation
+# Linux/Mac :
+chmod +x install_linux.sh && ./install_linux.sh
 
-**Linux/Mac :**
-```bash
-chmod +x install_linux.sh
-./install_linux.sh
-```
-
-**Windows :**
-```batch
+# Windows :
 install_windows.bat
 ```
 
-#### Ce que fait le script d'installation :
-
-| Étape | Linux | Windows |
-|-------|-------|---------|
-| 📁 Copie des fichiers | `~/.local/share/pixelforge-studio/` | `%LOCALAPPDATA%\PixelForgeStudio\` |
-| 🐍 Environnement Python | Crée un venv isolé | Crée un venv isolé |
-| 📦 Dépendances | Installation automatique | Installation automatique |
-| 🚀 Raccourci | Menu applications + commande `pixelforge-studio` | Menu Démarrer + Bureau |
-
----
-
-### Option B : Installation manuelle (développeurs)
-
-Si vous préférez gérer l'environnement vous-même :
-
-#### 1. Cloner le dépôt GitHub
+### Option B : Installation manuelle
 
 ```bash
+# Cloner et créer l'environnement
 git clone https://github.com/mxjnprr/PixelForge.git
 cd PixelForge
-```
-
-#### 2. Créer un environnement virtuel
-
-**Linux/Mac :**
-```bash
 python3 -m venv venv
-source venv/bin/activate
-```
+source venv/bin/activate  # Linux/Mac
+# venv\Scripts\activate   # Windows
 
-**Windows :**
-```batch
-python -m venv venv
-venv\Scripts\activate
-```
-
-#### 3. Installer les dépendances
-
-```bash
 pip install -r requirements.txt
 ```
 
----
+## 📖 Utilisation
 
-### Désinstallation
+Voir la [documentation complète](docs/USAGE.md) pour des instructions détaillées.
 
-**Linux/Mac :**
+### Lancement rapide
+
 ```bash
-./uninstall_linux.sh
-```
-
-**Windows :**
-```batch
-uninstall_windows.bat
-```
-
-> **Note :** Les fichiers de configuration utilisateur ne sont pas supprimés automatiquement.
-> - Linux : `~/.config/pixelforge-studio/`
-> - Windows : `%APPDATA%\pixelforge-studio\`
-
-## Utilisation
-
-### Lancement
-
-**Linux:**
-```bash
-./run_linux.sh
-# ou
-python3 main.py
-```
-
-**Windows:**
-```batch
-run_windows.bat
-REM ou
-python main.py
+./run_linux.sh      # Linux
+run_windows.bat     # Windows
 ```
 
 ### Configuration initiale
 
-1. Allez dans l'onglet **⚙️ Paramètres**
-2. Entrez votre **clé API Gemini**
-3. Cliquez sur **Tester** pour vérifier la connexion
-4. Configurez le **dossier de sortie** (optionnel)
-5. Choisissez le **modèle** et le **ratio d'aspect**
-6. Cliquez sur **Sauvegarder les paramètres**
+1. Onglet **⚙️ Paramètres** → Entrez votre clé API Gemini
+2. Cliquez **Tester** pour vérifier la connexion
 
-### Traitement d'images
-
-1. Allez dans l'onglet **📷 Traitement**
-2. **Ajoutez des images** :
-   - Cliquez sur "➕ Ajouter des images"
-   - Ou glissez-déposez des images directement
-3. **Rédigez votre prompt** dans la zone de texte
-4. Cliquez sur **🚀 Lancer le traitement**
-5. Suivez la progression dans la fenêtre de dialogue
-
-### Exemples de prompts
-
-- `Transforme cette photo en style aquarelle`
-- `Ajoute un arrière-plan de coucher de soleil`
-- `Rends cette image plus lumineuse et ajoute des étoiles`
-- `Change le style en illustration cartoon`
-- `Supprime l'arrière-plan et remplace-le par un fond blanc`
-
-## Modèles disponibles
+## 🛠️ Modèles disponibles
 
 | Modèle | Description |
 |--------|-------------|
-| **Nano Banana (Fast)** | `gemini-2.5-flash-image` - Rapide, idéal pour le traitement en masse |
-| **Nano Banana Pro** | `gemini-3-pro-image-preview` - Haute qualité, meilleur pour les détails |
+| **Nano Banana (Fast)** | Rapide, idéal pour le traitement en masse |
+| **Nano Banana Pro** | Haute qualité, meilleur pour les détails |
 
-## Formats supportés
-
-- JPEG (.jpg, .jpeg)
-- PNG (.png)
-- WebP (.webp)
-- GIF (.gif)
-- BMP (.bmp)
-
-## Structure du projet
+## 📁 Structure du projet
 
 ```
-Traitement Masse Nano Banana/
+PixelForge/
 ├── main.py                 # Point d'entrée
-├── requirements.txt        # Dépendances
-├── api_client.py          # Client API Gemini
-├── batch_processor.py     # Logique de traitement
+├── api_client.py           # Client API Gemini
+├── batch_processor.py      # Logique de traitement
 ├── gui/
-│   ├── main_window.py     # Fenêtre principale
-│   ├── image_list.py      # Liste d'images
-│   ├── settings_panel.py  # Panneau de configuration
-│   └── progress_dialog.py # Dialogue de progression
-├── utils/
-│   ├── config.py          # Gestion de configuration
-│   └── image_utils.py     # Utilitaires d'images
-├── run_linux.sh           # Lanceur Linux
-└── run_windows.bat        # Lanceur Windows
+│   ├── main_window.py      # Fenêtre principale
+│   ├── targeted_edit_tab.py # Édition ciblée avec dessin
+│   ├── image_list.py       # Liste d'images
+│   └── ...
+├── docs/
+│   └── USAGE.md            # Documentation d'utilisation
+└── utils/
+    ├── config.py           # Configuration
+    └── secure_storage.py   # Stockage sécurisé
 ```
 
-## Configuration
+## 🔧 Dépannage
 
-La configuration est stockée automatiquement :
-- **Linux/Mac** : `~/.config/nano-banana-processor/config.json`
-- **Windows** : `%APPDATA%\nano-banana-processor\config.json`
+| Problème | Solution |
+|----------|----------|
+| Clé API invalide | Vérifiez la clé sur [Google AI Studio](https://aistudio.google.com/app/apikey) |
+| L'API n'a pas généré d'image | Reformulez votre prompt |
+| Erreur d'initialisation | Vérifiez votre connexion internet |
 
-## Dépannage
+## 📜 Licence
 
-### "Clé API invalide"
-- Vérifiez que votre clé API est correcte
-- Assurez-vous que l'API Gemini est activée dans votre projet Google Cloud
-
-### "L'API n'a pas généré d'image"
-- Certains prompts peuvent être refusés par l'API pour des raisons de sécurité
-- Essayez de reformuler votre prompt
-
-### "Erreur d'initialisation du client"
-- Vérifiez votre connexion internet
-- Assurez-vous que le package `google-genai` est installé
-
-## Licence
-
-Ce projet est fourni tel quel pour un usage interne.
+Ce projet est fourni tel quel pour un usage personnel et éducatif.
