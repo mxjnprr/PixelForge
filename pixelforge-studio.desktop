@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=PixelForge Studio
+Comment=Éditez et générez des images avec l'IA
+Exec=pixelforge-studio
+Icon=pixelforge-studio
+Terminal=false
+Type=Application
+Categories=Graphics;Photography;
+Keywords=image;ai;generation;editing;gemini;
+StartupWMClass=pixelforge-studio
