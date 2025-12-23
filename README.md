@@ -17,31 +17,89 @@ Application de traitement d'images en masse utilisant l'API Nano Banana (Gemini)
 
 ## Installation
 
-### 1. Cloner ou télécharger le projet
+### Option A : Installation rapide (recommandée)
+
+Cette méthode installe l'application sur votre système avec un raccourci dans le menu des applications.
+
+#### 1. Cloner le dépôt GitHub
 
 ```bash
-cd "/mnt/Data/Air MKG/Commun/Air MKG/Code/Traitement Masse Nano Banana"
+git clone https://github.com/mxjnprr/PixelForge.git
+cd PixelForge
 ```
 
-### 2. Créer un environnement virtuel (recommandé)
+#### 2. Lancer le script d'installation
 
-**Linux/Mac:**
+**Linux/Mac :**
+```bash
+chmod +x install_linux.sh
+./install_linux.sh
+```
+
+**Windows :**
+```batch
+install_windows.bat
+```
+
+#### Ce que fait le script d'installation :
+
+| Étape | Linux | Windows |
+|-------|-------|---------|
+| 📁 Copie des fichiers | `~/.local/share/pixelforge-studio/` | `%LOCALAPPDATA%\PixelForgeStudio\` |
+| 🐍 Environnement Python | Crée un venv isolé | Crée un venv isolé |
+| 📦 Dépendances | Installation automatique | Installation automatique |
+| 🚀 Raccourci | Menu applications + commande `pixelforge-studio` | Menu Démarrer + Bureau |
+
+---
+
+### Option B : Installation manuelle (développeurs)
+
+Si vous préférez gérer l'environnement vous-même :
+
+#### 1. Cloner le dépôt GitHub
+
+```bash
+git clone https://github.com/mxjnprr/PixelForge.git
+cd PixelForge
+```
+
+#### 2. Créer un environnement virtuel
+
+**Linux/Mac :**
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-**Windows:**
+**Windows :**
 ```batch
 python -m venv venv
 venv\Scripts\activate
 ```
 
-### 3. Installer les dépendances
+#### 3. Installer les dépendances
 
 ```bash
 pip install -r requirements.txt
 ```
+
+---
+
+### Désinstallation
+
+**Linux/Mac :**
+```bash
+./uninstall_linux.sh
+```
+
+**Windows :**
+```batch
+uninstall_windows.bat
+```
+
+> **Note :** Les fichiers de configuration utilisateur ne sont pas supprimés automatiquement.
+> - Linux : `~/.config/pixelforge-studio/`
+> - Windows : `%APPDATA%\pixelforge-studio\`
 
 ## Utilisation
 
