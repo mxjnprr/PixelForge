@@ -279,3 +279,141 @@ class NanoBananaClient:
             
         except Exception as e:
             return None, f"Erreur de génération: {e}"
+    
+    def edit_image_with_sketch(
+        self,
+        original_image_path: str,
+        sketch_image_path: str,
+        prompt: str,
+        model: str = "gemini-2.5-flash-image",
+        aspect_ratio: Optional[str] = None,
+        output_quality: str = "standard",
+        max_retries: int = 3,
+        retry_delay: float = 2.0
+    ) -> Tuple[Optional[bytes], Optional[str]]:
+        """
+        Edit an image using a separate sketch/drawing to indicate the target area.
+        
+        This method sends BOTH the original image and a sketch showing where
+        to apply changes, allowing the AI to understand the target zone
+        without modifying the original image with overlays.
+        
+        Args:
+            original_image_path: Path to the original image (unchanged)
+            sketch_image_path: Path to the sketch/drawing showing the target zone
+            prompt: Editing prompt to apply
+            model: Model to use for generation
+            aspect_ratio: Output aspect ratio
+            output_quality: Output quality
+            max_retries: Maximum number of retry attempts
+            retry_delay: Delay between retries in seconds
+        
+        Returns:
+            Tuple of (image_bytes, error_message)
+        """
+        if self._client is None:
+            return None, "Client non initialisé"
+        
+        try:
+            from google.genai import types
+            from PIL import ExifTags
+            
+            # Load the original image and apply EXIF orientation
+            original_image = Image.open(original_image_path)
+            
+            # Apply EXIF orientation
+            try:
+                exif = original_image._getexif()
+                if exif:
+                    orientation_key = next(
+                        (k for k, v in ExifTags.TAGS.items() if v == 'Orientation'), 
+                        None
+                    )
+                    if orientation_key and orientation_key in exif:
+                        orientation = exif[orientation_key]
+                        if orientation == 2:
+                            original_image = original_image.transpose(Image.FLIP_LEFT_RIGHT)
+                        elif orientation == 3:
+                            original_image = original_image.rotate(180, expand=True)
+                        elif orientation == 4:
+                            original_image = original_image.transpose(Image.FLIP_TOP_BOTTOM)
+                        elif orientation == 5:
+                            original_image = original_image.rotate(-90, expand=True).transpose(Image.FLIP_LEFT_RIGHT)
+                        elif orientation == 6:
+                            original_image = original_image.rotate(-90, expand=True)
+                        elif orientation == 7:
+                            original_image = original_image.rotate(90, expand=True).transpose(Image.FLIP_LEFT_RIGHT)
+                        elif orientation == 8:
+                            original_image = original_image.rotate(90, expand=True)
+            except Exception:
+                pass
+            
+            # Load the sketch image
+            sketch_image = Image.open(sketch_image_path)
+            
+            # Build configuration
+            config_kwargs = {
+                "response_modalities": ["Image", "Text"]
+            }
+            
+            image_config_kwargs = {}
+            if aspect_ratio and aspect_ratio != "original":
+                image_config_kwargs["aspect_ratio"] = aspect_ratio
+            
+            if output_quality in ("2K", "4K"):
+                image_config_kwargs["image_size"] = output_quality
+            
+            if image_config_kwargs:
+                config_kwargs["image_config"] = types.ImageConfig(**image_config_kwargs)
+            
+            config = types.GenerateContentConfig(**config_kwargs)
+            
+            # Build the prompt that explains the two images
+            enhanced_prompt = (
+                f"Je te fournis deux images:\n"
+                f"1. L'IMAGE ORIGINALE que tu dois modifier\n"
+                f"2. Un SCHÉMA/DESSIN montrant la zone à modifier (marquée avec des couleurs)\n\n"
+                f"INSTRUCTION: {prompt}\n\n"
+                f"IMPORTANT: Applique la modification UNIQUEMENT dans la zone indiquée par le dessin coloré. "
+                f"Le reste de l'image originale doit rester identique et intact. "
+                f"Ne reproduis PAS les traits de couleur du schéma dans l'image finale."
+            )
+            
+            # Attempt with retries - send both images
+            last_error = None
+            for attempt in range(max_retries):
+                try:
+                    response = self._client.models.generate_content(
+                        model=model,
+                        contents=[enhanced_prompt, original_image, sketch_image],
+                        config=config
+                    )
+                    
+                    # Extract image from response
+                    for part in response.parts:
+                        if part.inline_data is not None:
+                            import base64
+                            image_data = part.inline_data.data
+                            if isinstance(image_data, str):
+                                image_bytes = base64.b64decode(image_data)
+                            else:
+                                image_bytes = image_data
+                            return image_bytes, None
+                    
+                    for part in response.parts:
+                        if part.text:
+                            return None, f"L'API n'a pas généré d'image: {part.text[:200]}"
+                    
+                    return None, "L'API n'a pas retourné d'image"
+                    
+                except Exception as e:
+                    last_error = str(e)
+                    if attempt < max_retries - 1:
+                        time.sleep(retry_delay * (attempt + 1))
+                        continue
+                    break
+            
+            return None, f"Erreur après {max_retries} tentatives: {last_error}"
+            
+        except Exception as e:
+            return None, f"Erreur de traitement: {e}"

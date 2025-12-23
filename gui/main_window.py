@@ -17,6 +17,7 @@ from PyQt6.QtGui import QFont, QPixmap
 from gui.image_list import ImageListWidget
 from gui.settings_panel import SettingsPanel
 from gui.progress_dialog import ProgressDialog
+from gui.targeted_edit_tab import TargetedEditTab
 from api_client import NanoBananaClient
 from batch_processor import BatchProcessor, BatchJob, ImageStatus, ImageItem
 from utils.config import get_config, Config
@@ -139,6 +140,10 @@ class MainWindow(QMainWindow):
         
         # === Generation Tab ===
         self._setup_generation_tab()
+        
+        # === Targeted Edit Tab ===
+        self._targeted_edit_tab = TargetedEditTab()
+        self._tab_widget.addTab(self._targeted_edit_tab, "🎯 Édition Ciblée")
         
         # === Settings Tab (API only) ===
         self._settings_panel = SettingsPanel()
@@ -470,7 +475,7 @@ class MainWindow(QMainWindow):
                 self, "Attention", 
                 "Clé API non configurée. Allez dans l'onglet Paramètres."
             )
-            self._tab_widget.setCurrentIndex(2)
+            self._tab_widget.setCurrentIndex(3)
             return
         
         # Apply style to prompt
@@ -554,7 +559,7 @@ class MainWindow(QMainWindow):
                 self, "Attention", 
                 "Clé API non configurée. Allez dans l'onglet Paramètres."
             )
-            self._tab_widget.setCurrentIndex(2)
+            self._tab_widget.setCurrentIndex(3)
             return
         
         output_folder = self._gen_output_folder_edit.text().strip()
