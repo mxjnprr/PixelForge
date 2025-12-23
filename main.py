@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Nano Banana Batch Image Processor
+PixelForge Studio
 Main entry point for the application.
 
 A cross-platform application for batch processing images using 
@@ -16,7 +16,7 @@ sys.path.insert(0, app_dir)
 
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QIcon
 
 from gui.main_window import MainWindow
 
@@ -30,9 +30,18 @@ def main():
     
     # Create application
     app = QApplication(sys.argv)
-    app.setApplicationName("Nano Banana Batch Processor")
+    
+    # Set application identity - IMPORTANT for Linux taskbar/Alt+Tab
+    app.setApplicationName("PixelForge Studio")
+    app.setApplicationDisplayName("PixelForge Studio")
+    app.setDesktopFileName("pixelforge-studio")  # Matches .desktop file
     app.setOrganizationName("Air MKG")
     app.setOrganizationDomain("airmkg.com")
+    
+    # Set application icon
+    icon_path = os.path.join(app_dir, "icon.png")
+    if os.path.exists(icon_path):
+        app.setWindowIcon(QIcon(icon_path))
     
     # Set default font
     font = app.font()
